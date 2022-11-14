@@ -33,7 +33,7 @@ class Rental(models.Model):
     status = models.BooleanField()
 
 
-class Accidents(models.Model):
+class Accident(models.Model):
     type = models.CharField(max_length=45)
     description = models.CharField(max_length=500)
     rental = models.ForeignKey(Rental, on_delete=models.CASCADE)

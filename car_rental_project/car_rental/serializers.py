@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import Car, Customer, Rental, Accidents, Review
+from .models import Car, Customer, Rental, Accident, Review
+
 
 class CarSerializer(serializers.ModelSerializer):
     class Meta:
@@ -24,9 +25,9 @@ class RentalSerializer(serializers.ModelSerializer):
         fields = ['id', 'pickup_date', 'return_date', 'customer', 'car', 'status']
 
 
-class AccidentsSerializer(serializers.ModelSerializer):
+class AccidentSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Accidents
+        model = Accident
         fields = ['id', 'type', 'description', 'rental']
 
 
