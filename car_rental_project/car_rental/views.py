@@ -1,4 +1,5 @@
 from django.http import HttpResponse
+from django_filters import FilterSet, DateTimeFilter, NumberFilter, AllValuesFilter
 from rest_framework import generics
 from rest_framework.permissions import IsAdminUser, IsAuthenticatedOrReadOnly, IsAuthenticated
 from rest_framework.response import Response
@@ -12,11 +13,22 @@ def index(request):
     return HttpResponse("Hello, world.")
 
 
+class CarFilter(FilterSet):
+    min_price = NumberFilter(field_name='price', lookup_expr='gte')
+    max_price = NumberFilter(field_name='price', lookup_expr='lte')
+    client_name = AllValuesFilter(field_name='client__surnamename')
+
+    class Meta:
+        model = Car
+        fields = ['min_price', 'max_price', 'client_name']
+
+
 class CarList(generics.ListCreateAPIView):
     queryset = Car.objects.all()
     serializer_class = CarSerializer
     name = 'car-list'
     permission_classes = [IsAuthenticated]
+    filter_class = CarFilter
 
 
 class CarDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -42,11 +54,24 @@ class CustomerDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAdminUser]
 
 
+class RentalFilter(FilterSet):
+    from_pickup_date = DateTimeFilter(field_name='pickup_date', lookup_expr='gte')
+    to_pickup_date = DateTimeFilter(field_name='pickup_date', lookup_expr='lte')
+    from_return_date = DateTimeFilter(field_name='return_date', lookup_expr='gte')
+    to_return_date = DateTimeFilter(field_name='return_date', lookup_expr='lte')
+
+    class Meta:
+        model = Rental
+        fields = ['from_pickup_date', 'to_pickup_date', 'from_return_date', 'to_return_date']
+
+
 class RentalList(generics.ListCreateAPIView):
     queryset = Rental.objects.all()
     serializer_class = RentalSerializer
     name = 'rental-list'
     permission_classes = [IsAuthenticated]
+    filter_class = RentalFilter
+    ordering_fields = ['pickup_date', 'return_date']
 
 
 class RentalDetail(generics.RetrieveUpdateDestroyAPIView):
