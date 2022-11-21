@@ -14,5 +14,5 @@ urlpatterns = [
     path('accidents', views.AccidentList.as_view(), name=views.AccidentList.name),
     path('accidents/<int:pk>', views.AccidentDetail.as_view(), name=views.AccidentDetail.name),
     path('reviews', views.ReviewList.as_view(), name=views.ReviewList.name),
-    path('reviews/<int:pk>', views.ReviewDetail.as_view(), name=views.RentalDetail.name)
+    path('reviews/<int:pk>', views.ReviewDetail.as_view(), name=views.ReviewDetail.name)
 ]
