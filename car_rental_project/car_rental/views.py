@@ -31,6 +31,8 @@ class CustomerList(generics.ListCreateAPIView):
     serializer_class = CustomerSerializer
     name = 'customer-list'
     permission_classes = [IsAdminUser]
+    search_fields = ['name', 'surname', 'email']
+    ordering_fields = ['name', 'email']
 
 
 class CustomerDetail(generics.RetrieveUpdateDestroyAPIView):

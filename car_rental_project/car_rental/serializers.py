@@ -2,16 +2,22 @@ from rest_framework import serializers
 from .models import Car, Customer, Rental, Accident, Review
 
 
-class CarSerializer(serializers.ModelSerializer):
+class CarSerializer(serializers.HyperlinkedModelSerializer):
+    rentals = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='rental-detail')
+    reviews = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='review-detail')
+
     class Meta:
         model = Car
-        fields = ['id', 'brand', 'model', 'type', 'production_year', 'price', 'registration_plate']
+        fields = ['id', 'url', 'brand', 'model', 'type', 'production_year', 'price', 'registration_plate', 'rentals', 'reviews']
 
 
-class CustomerSerializer(serializers.ModelSerializer):
+class CustomerSerializer(serializers.HyperlinkedModelSerializer):
+    rentals = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='rental-detail')
+    reviews = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='review-detail')
+
     class Meta:
         model = Customer
-        fields = ['id', 'name', 'surname', 'email', 'password', 'phone', 'address']
+        fields = ['id', 'url', 'name', 'surname', 'email', 'password', 'phone', 'address', 'rentals', 'reviews']
 
     def validate_name(self, value):
         if value.capitalize() != value:
@@ -19,22 +25,32 @@ class CustomerSerializer(serializers.ModelSerializer):
         return value
 
 
-class RentalSerializer(serializers.ModelSerializer):
+class RentalSerializer(serializers.HyperlinkedModelSerializer):
+    accidents = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='accident-detail')
+    customer = serializers.SlugRelatedField(queryset=Customer.objects.all(), slug_field='surname')
+    car = serializers.SlugRelatedField(queryset=Car.objects.all(), slug_field='model')
+
     class Meta:
         model = Rental
-        fields = ['id', 'pickup_date', 'return_date', 'customer', 'car', 'status']
+        fields = ['id', 'url', 'pickup_date', 'return_date', 'customer', 'car', 'status', 'accidents']
 
 
-class AccidentSerializer(serializers.ModelSerializer):
+class AccidentSerializer(serializers.HyperlinkedModelSerializer):
+    type = serializers.ChoiceField(choices=Accident.TYPES)
+    rental = serializers.StringRelatedField()
+
     class Meta:
         model = Accident
-        fields = ['id', 'type', 'description', 'rental']
+        fields = ['id', 'url', 'type', 'description', 'rental']
 
 
-class ReviewSerializer(serializers.ModelSerializer):
+class ReviewSerializer(serializers.HyperlinkedModelSerializer):
+    customer = serializers.SlugRelatedField(queryset=Customer.objects.all(), slug_field='surname')
+    car = serializers.SlugRelatedField(queryset=Car.objects.all(), slug_field='model')
+
     class Meta:
         model = Review
-        fields = ['stars', 'date', 'customer', 'car']
+        fields = ['id', 'url', 'stars', 'date', 'customer', 'car']
 
     def validate_stars(self, value):
         if value < 1 or value > 5:
