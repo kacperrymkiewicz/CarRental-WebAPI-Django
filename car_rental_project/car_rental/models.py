@@ -45,9 +45,15 @@ class Accident(models.Model):
     description = models.CharField(max_length=500)
     rental = models.ForeignKey(Rental, related_name='accidents', on_delete=models.CASCADE)
 
+    def __str__(self):
+        return "Accident: " + self.type + ", " + self.rental.car.brand + " " + self.rental.car.model + " - " + self.rental.customer.surname
+
 
 class Review(models.Model):
     stars = models.IntegerField()
     date = models.DateField()
     customer = models.ForeignKey(Customer, related_name='reviews', on_delete=models.CASCADE)
     car = models.ForeignKey(Car, related_name='reviews', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return "Review: " + str(self.stars) + " stars, " + self.customer.surname + ", " + self.car.brand + " " + self.car.model
