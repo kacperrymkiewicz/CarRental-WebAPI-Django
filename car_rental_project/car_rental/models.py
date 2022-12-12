@@ -14,15 +14,17 @@ class Car(models.Model):
 
 
 class Customer(models.Model):
-    name = models.CharField(max_length=45)
-    surname = models.CharField(max_length=45)
-    email = models.EmailField()
-    password = models.CharField(max_length=50)
-    phone = models.CharField(max_length=9)
-    address = models.CharField(max_length=120)
+    firstname = models.CharField(max_length=45)
+    lastname = models.CharField(max_length=45)
+    phone_number = models.CharField(max_length=9)
+    zip_code = models.CharField(max_length=6)
+    city = models.CharField(max_length=45)
+    street = models.CharField(max_length=45)
+    house_number = models.CharField(max_length=5)
+    owner = models.ForeignKey('auth.User', related_name='customers', on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.name + " " + self.surname
+        return self.firstname + " " + self.lastname
 
 
 class Rental(models.Model):
@@ -33,7 +35,7 @@ class Rental(models.Model):
     status = models.BooleanField()
 
     def __str__(self):
-        return "From " + str(self.pickup_date) + " to " + str(self.return_date) + ": " + self.customer.surname + " - " + self.car.brand + " " + self.car.model
+        return "From " + str(self.pickup_date) + " to " + str(self.return_date) + ": " + self.customer.lastname + " - " + self.car.brand + " " + self.car.model
 
 
 class Accident(models.Model):
@@ -46,7 +48,7 @@ class Accident(models.Model):
     rental = models.ForeignKey(Rental, related_name='accidents', on_delete=models.CASCADE)
 
     def __str__(self):
-        return "Accident: " + self.type + ", " + self.rental.car.brand + " " + self.rental.car.model + " - " + self.rental.customer.surname
+        return "Accident: " + self.type + ", " + self.rental.car.brand + " " + self.rental.car.model + " - " + self.rental.customer.lastname
 
 
 class Review(models.Model):
@@ -56,4 +58,4 @@ class Review(models.Model):
     car = models.ForeignKey(Car, related_name='reviews', on_delete=models.CASCADE)
 
     def __str__(self):
-        return "Review: " + str(self.stars) + " stars, " + self.customer.surname + ", " + self.car.brand + " " + self.car.model
+        return "Review: " + str(self.stars) + " stars, " + self.customer.lastname + ", " + self.car.brand + " " + self.car.model

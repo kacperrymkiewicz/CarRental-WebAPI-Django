@@ -14,20 +14,31 @@ class CarSerializer(serializers.HyperlinkedModelSerializer):
 class CustomerSerializer(serializers.HyperlinkedModelSerializer):
     rentals = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='rental-detail')
     reviews = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='review-detail')
+    owner = serializers.ReadOnlyField(source='owner.username')
 
     class Meta:
         model = Customer
-        fields = ['id', 'url', 'name', 'surname', 'email', 'password', 'phone', 'address', 'rentals', 'reviews']
+        fields = ['id', 'url', 'firstname', 'lastname', 'phone_number', 'zip_code', 'city', 'street', 'house_number', 'owner', 'rentals', 'reviews']
 
-    def validate_name(self, value):
+    def validate_firstname(self, value):
         if value.capitalize() != value:
             raise serializers.ValidationError("First name should start with a capital letter.")
+        return value
+
+    def validate_lastname(self, value):
+        if value.capitalize() != value:
+            raise serializers.ValidationError("Last name should start with a capital letter.")
+        return value
+
+    def validate_city(self, value):
+        if value.capitalize() != value:
+            raise serializers.ValidationError("City should start with a capital letter.")
         return value
 
 
 class RentalSerializer(serializers.HyperlinkedModelSerializer):
     accidents = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='accident-detail')
-    customer = serializers.SlugRelatedField(queryset=Customer.objects.all(), slug_field='surname')
+    customer = serializers.SlugRelatedField(queryset=Customer.objects.all(), slug_field='lastname')
     car = serializers.SlugRelatedField(queryset=Car.objects.all(), slug_field='model')
 
     class Meta:
@@ -45,7 +56,7 @@ class AccidentSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class ReviewSerializer(serializers.HyperlinkedModelSerializer):
-    customer = serializers.SlugRelatedField(queryset=Customer.objects.all(), slug_field='surname')
+    customer = serializers.SlugRelatedField(queryset=Customer.objects.all(), slug_field='lastname')
     car = serializers.SlugRelatedField(queryset=Car.objects.all(), slug_field='model')
 
     class Meta:

@@ -46,6 +46,9 @@ class CustomerList(generics.ListCreateAPIView):
     search_fields = ['name', 'surname', 'email']
     ordering_fields = ['name', 'email']
 
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
 
 class CustomerDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Customer.objects.all()
