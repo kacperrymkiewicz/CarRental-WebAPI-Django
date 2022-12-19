@@ -7,6 +7,7 @@ from rest_framework.reverse import reverse
 
 from .models import Car, Customer, Rental, Accident, Review
 from .serializers import CarSerializer, CustomerSerializer, RentalSerializer, AccidentSerializer, ReviewSerializer
+from .permissions import IsOwnerOrReadOnly
 
 
 def index(request):
@@ -42,7 +43,7 @@ class CustomerList(generics.ListCreateAPIView):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
     name = 'customer-list'
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAuthenticated]
     search_fields = ['name', 'surname', 'email']
     ordering_fields = ['name', 'email']
 
@@ -54,7 +55,7 @@ class CustomerDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
     name = 'customer-detail'
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
 
 
 class RentalFilter(FilterSet):
