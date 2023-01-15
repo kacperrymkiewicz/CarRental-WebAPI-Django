@@ -1,0 +1,226 @@
+{
+	"info": {
+		"_postman_id": "7c00079a-c96a-484e-b804-7098365550b8",
+		"name": "CarRental",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GetCustomers",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {\r",
+							"    pm.response.to.have.status(pm.environment.get(\"status_code\"));\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 300ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(pm.globals.get(\"response_time\"));\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Content-Type is present\", function () {\r",
+							"    pm.response.to.have.header(\"Content-Type\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.environment.set(\"env_var\", \"variable_value\");\r",
+							"pm.globals.set(\"global_var\", \"variable_value\");\r",
+							"pm.collectionVariables.set(\"local_var\", \"variable_value\");\r",
+							"\r",
+							"pm.test(\"Local variable is set\", function() {\r",
+							"    pm.collectionVariables.has(\"local_var\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Global variable is set\", function() {\r",
+							"    pm.globals.has(\"global_var\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Environment variable is set\", function() {\r",
+							"    pm.environment.has(\"env_var\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "Qwerty123!@#",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "testuser",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/customers",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"customers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PostReview",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "Qwerty123!@#",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "testuser",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/reviews?stars=4&date=20.02.2020&customer=Pudzianowski&car=asd asd",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"reviews"
+					],
+					"query": [
+						{
+							"key": "stars",
+							"value": "4"
+						},
+						{
+							"key": "date",
+							"value": "20.02.2020"
+						},
+						{
+							"key": "customer",
+							"value": "Pudzianowski"
+						},
+						{
+							"key": "car",
+							"value": "asd asd"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "stars",
+							"value": "5",
+							"type": "default"
+						},
+						{
+							"key": "date",
+							"value": "2022-02-02",
+							"type": "default"
+						},
+						{
+							"key": "customer",
+							"value": "Pudzianowski",
+							"type": "default"
+						},
+						{
+							"key": "car",
+							"value": "Passat B6",
+							"type": "default"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/reviews/11",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"reviews",
+						"11"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteReview",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/reviews/{id}",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"reviews",
+						"{id}"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "local_var",
+			"value": ""
+		}
+	]
+}
