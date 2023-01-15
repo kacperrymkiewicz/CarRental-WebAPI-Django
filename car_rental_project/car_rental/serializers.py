@@ -48,7 +48,7 @@ class RentalSerializer(serializers.HyperlinkedModelSerializer):
 
 class AccidentSerializer(serializers.HyperlinkedModelSerializer):
     type = serializers.ChoiceField(choices=Accident.TYPES)
-    rental = serializers.StringRelatedField()
+    rental = serializers.SlugRelatedField(queryset=Rental.objects.all(), slug_field='id')
 
     class Meta:
         model = Accident
@@ -58,10 +58,11 @@ class AccidentSerializer(serializers.HyperlinkedModelSerializer):
 class ReviewSerializer(serializers.HyperlinkedModelSerializer):
     customer = serializers.SlugRelatedField(queryset=Customer.objects.all(), slug_field='lastname')
     car = serializers.SlugRelatedField(queryset=Car.objects.all(), slug_field='model')
+    owner = serializers.ReadOnlyField(source='owner.username')
 
     class Meta:
         model = Review
-        fields = ['id', 'url', 'stars', 'date', 'customer', 'car']
+        fields = ['id', 'url', 'stars', 'date', 'customer', 'car', 'owner']
 
     def validate_stars(self, value):
         if value < 1 or value > 5:

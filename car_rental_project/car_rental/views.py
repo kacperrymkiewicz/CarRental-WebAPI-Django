@@ -24,7 +24,7 @@ class CarFilter(FilterSet):
         fields = ['min_price', 'max_price', 'client_name']
 
 
-class CarList(generics.ListCreateAPIView):
+class CarList(generics.ListAPIView):
     queryset = Car.objects.all()
     serializer_class = CarSerializer
     name = 'car-list'
@@ -89,7 +89,7 @@ class AccidentList(generics.ListCreateAPIView):
     queryset = Accident.objects.all()
     serializer_class = AccidentSerializer
     name = 'accident-list'
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAuthenticated]
 
 
 class AccidentDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -105,12 +105,15 @@ class ReviewList(generics.ListCreateAPIView):
     name = 'review-list'
     permission_classes = [IsAuthenticated]
 
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
 
 class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
     name = 'review-detail'
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
 
 
 class ApiRoot(generics.GenericAPIView):

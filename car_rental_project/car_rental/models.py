@@ -56,6 +56,7 @@ class Review(models.Model):
     date = models.DateField()
     customer = models.ForeignKey(Customer, related_name='reviews', on_delete=models.CASCADE)
     car = models.ForeignKey(Car, related_name='reviews', on_delete=models.CASCADE)
+    owner = models.ForeignKey('auth.User', related_name='reviews', on_delete=models.CASCADE)
 
     def __str__(self):
         return "Review: " + str(self.stars) + " stars, " + self.customer.lastname + ", " + self.car.brand + " " + self.car.model
